@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jygj.summ.mapper.OrderBigMapper">
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+		order_id AS orderId, order_start_date AS orderStartDate, order_end_date AS orderEndDate, order_type AS orderType, order_status AS orderStatus, backup, createid, modifyid, createtime, modifytime, isDel, house_id AS houseId, need_json AS needJson, price, total_price AS totalPrice, shop_id AS shopId, train_id AS trainId, service_cycle AS serviceCycle, month_number AS monthNumber
+	</sql>
+
+    <select id="getOrder" parameterType="java.util.Map" resultType="com.jygj.summ.model.response.MouthOrderModel">
+		SELECT
+		ob.order_id AS orderId,
+		ob.order_start_date AS orderStartDate,
+		ob.order_end_date AS orderEndDate,
+		ob.order_type AS orderType,
+		ob.order_status AS orderStatus,
+		ob.backup AS backup,
+		ch.house_address AS house_address
+		FROM
+		re_visit_order rvo
+		LEFT JOIN order_big ob ON rvo.order_id = ob.order_id
+		LEFT JOIN customer_house ch ON ob.house_id = ch.house_id
+		WHERE
+		ob.order_start_date &gt; #{start_time}
+		AND ob.order_start_date &lt; #{end_time}
+		AND ob.train_id = #{train_id}
+		GROUP BY ob.order_id
+		LIMIT #{page},20
+	</select>
+
+    <select id="getCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		(
+		SELECT
+		ob.order_id AS orderId,
+		ob.order_start_date,
+		ob.order_end_date,
+		ob.order_type,
+		ob.order_status,
+		ob. BACKUP,
+		ch.house_address,
+		COUNT(*)
+		FROM
+		re_visit_order rvo
+		LEFT JOIN order_big ob ON rvo.order_id = ob.order_id
+		LEFT JOIN customer_house ch ON ob.house_id = ch.house_id
+		WHERE
+		ob.order_start_date &gt; #{start_time}
+		AND ob.order_start_date &lt; #{end_time}
+		AND ob.train_id = #{train_id}
+		GROUP BY
+		ob.order_id
+		) AS orders
+	</select>
+
+	<select id="getOrderDetail" parameterType="java.lang.String" resultType="com.jygj.summ.model.response.OrderDetail">
+		SELECT
+			ob.order_id AS orderId,
+			ob.order_start_date AS orderStartDate,
+			ob.order_end_date AS orderEndDate,
+			ob.`backup` AS backup,
+			ob.order_type AS orderType,
+			ob.order_status AS orderStatus,
+			ob.service_cycle AS serviceCycle,
+			ob.need_json AS needJson,
+			ci.customer_name AS customer_name,
+			ci.customer_phone AS customer_phone,
+			ch.house_address AS house_address,
+			s.shop_name,
+			t.train_name
+		FROM
+			order_big ob
+		LEFT JOIN customer_house ch ON ob.house_id = ch.house_id
+		LEFT JOIN customer_info ci ON ch.customer_id = ci.customer_id
+		LEFT JOIN shop s ON ob.shop_id = s.shop_id
+		LEFT JOIN training t ON ob.train_id = t.train_id
+		WHERE
+			ob.order_id = #{order_id}
+	</select>
+</mapper>

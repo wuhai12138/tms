@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jygj.summ.mapper.ReVisitOrderMapper">
+
+	<!-- 通用查询结果列-->
+	<sql id="Base_Column_List">
+		ReVisitId, order_id AS orderId, house_id AS houseId, nanny_id AS nannyId, train_id AS trainId, ReVisitDate, ReVisitStatus, Remark, createtime, modifytime, createid, modifyid, isDel, VisitType, Assess, AssessContent
+	</sql>
+
+	<select id="getTodayOrder" parameterType="java.util.Map" resultType="com.jygj.summ.model.response.TodayOrderModel">
+		SELECT
+		ose.ReVisitId AS ReVisitId,
+		ose.ReVisitDate AS ReVisitDate,
+		ose.ReVisitStatus AS ReVisitStatus,
+		ose.VisitType AS VisitType,
+		ose.house_address AS house_address,
+		ose.shop_id AS shop_id,
+		ose.shop_name AS shop_name,
+		ose.mission_id AS mission_id ,
+		GROUP_CONCAT(ni.nanny_name) AS nanny_name,
+		ose.mission_time AS mission_time
+		FROM
+		(
+		SELECT
+		rvo.ReVisitId,
+		rvo.ReVisitDate,
+		rvo.ReVisitStatus,
+		rvo.VisitType,
+		ch.house_address,
+		s.shop_id,
+		s.shop_name,
+		os.mission_id,
+		os.mission_time
+		FROM
+		re_visit_order rvo
+		LEFT JOIN order_small os ON rvo.order_id = os.order_id
+		LEFT JOIN shop s ON os.shop_id = s.shop_id
+		LEFT JOIN customer_house ch ON os.house_id = ch.house_id
+		WHERE
+		os.mission_date >= rvo.ReVisitDate
+		AND rvo.ReVisitDate &lt;= #{date}
+		AND rvo.nanny_id = #{nanny_id}
+		AND rvo.ReVisitStatus = 1
+		AND rvo.isDel = 0
+		AND os.isDel = 0
+		AND os.mission_status = 1
+		GROUP BY
+		rvo.order_id
+		) AS ose
+		LEFT JOIN order_small_nanny osn ON ose.mission_id = osn.mission_id
+		LEFT JOIN nanny_info ni ON osn.nanny_id = ni.nanny_id
+		GROUP BY
+		osn.mission_id
+		ORDER BY
+		ose.mission_time,ose.ReVisitDate
+	</select>
+
+	<update id="updateById" parameterType="java.util.Map">
+		UPDATE re_visit_order
+		SET Assess = #{Assess},
+			AssessContent = #{AssessContent},
+			nanny_id = #{nanny_id},
+			ReVisitStatus = #{ReVisitStatus},
+			mission_id = #{mission_id}
+		WHERE
+			ReVisitId = #{ReVisitId}
+	</update>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jygj.summ.mapper.LoginResponseMapper">
+    <select id="getLoginData" parameterType="java.lang.String" resultType="com.jygj.summ.model.response.LoginResponse">
+        SELECT
+        n.nanny_id AS nannyId,
+        n.nanny_name AS nannyName,
+        n.nanny_phone AS nannyPhone,
+        n.nanny_address AS nannyAddress,
+        t.train_id AS trainId,
+        t.train_phone AS trainPhone,
+        t.train_name AS trainName
+        FROM
+        nanny_info n
+        LEFT JOIN training t ON n.train_id = t.train_id
+        WHERE
+        n.nanny_phone = #{phone}
+        AND n.isDel = "0"
+    </select>
+
+</mapper>
