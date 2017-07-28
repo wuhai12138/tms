@@ -33,7 +33,7 @@ public class OrderBigController {
 
     @ResponseBody
     @RequestMapping("/order")
-    public Object getOrder(Integer train_id, String date, Integer page) throws ParseException {
+    public Object getOrder(Integer nanny_id, String date, Integer page) throws ParseException {
         Map map = new HashMap();
         Date date1 = DateUtil.stringForDate(date);
         Calendar calendar = Calendar.getInstance();
@@ -43,7 +43,7 @@ public class OrderBigController {
         String end_time = DateUtil.getMaxMonthDate(date1) + " 23:59:59";
         map.put("start_time",start_time);
         map.put("end_time", end_time);
-        map.put("train_id", train_id);
+        map.put("nanny_id", nanny_id);
         map.put("page", page-1);
         List<MouthOrderModel> mouthOrderModels = orderBigMapper.getOrder(map);
         for(int i = 0; i < mouthOrderModels.size(); i++){
