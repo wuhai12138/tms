@@ -24,6 +24,8 @@
 		ob.order_start_date &gt; #{start_time}
 		AND ob.order_start_date &lt; #{end_time}
 		AND ob.teacher = #{nanny_id}
+		AND ob.order_status != "6"
+		AND ob.order_status != "7"
 		GROUP BY ob.order_id
 		LIMIT #{page},20
 	</select>
@@ -49,7 +51,7 @@
 		WHERE
 		ob.order_start_date &gt; #{start_time}
 		AND ob.order_start_date &lt; #{end_time}
-		AND ob.train_id = #{train_id}
+		AND ob.teacher = #{nanny_id}
 		GROUP BY
 		ob.order_id
 		) AS orders

@@ -25,10 +25,10 @@ public class ShopDetailController {
     @RequestMapping("/shop")
     public Object getShopDetail(Integer train_id){
         List<ShopDetailResponse> list = shopMapper.getShopDetail(train_id);
-        String url = "https://spay3.swiftpass.cn/spay/payMoneyNew?openID=oBqbzs7CL5iGfE0cLEGHFUb0GWqU&redirect=true&mchId=133500000263&client=platform&userId=";
-        for(int i = 0; i < list.size(); i++){
-            list.get(i).setPaycode(url + list.get(i).getPaycode());
-        }
+//        String url = "https://spay3.swiftpass.cn/spay/payMoneyNew?openID=oBqbzs7CL5iGfE0cLEGHFUb0GWqU&redirect=true&mchId=133500000263&client=platform&userId=";
+//        for(int i = 0; i < list.size(); i++){
+//            list.get(i).setPaycode(url + list.get(i).getPaycode());
+//        }
         Map map = new HashMap();
         map.put("train_id",train_id);
         map.put("list",list);

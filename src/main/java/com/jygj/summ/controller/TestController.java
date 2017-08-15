@@ -31,10 +31,10 @@ public class TestController {
     public String test(){
         Test test = new Test();
         test.setName("cc");
-        EntityWrapper<Test> entityWrapper = new EntityWrapper<Test>();
-        iTestService.selectPage(new Page<Test>(2,5), entityWrapper);
-        entityWrapper.setEntity(test);
-        iTestService.selectPage(new Page<Test>(1, 5), entityWrapper);
+//        EntityWrapper<Test> entityWrapper = new EntityWrapper<Test>();
+//        iTestService.selectPage(new Page<Test>(2,5), entityWrapper);
+//        entityWrapper.setEntity(test);
+//        iTestService.selectPage(new Page<Test>(1, 5), entityWrapper);
         return "ok";
     }
 

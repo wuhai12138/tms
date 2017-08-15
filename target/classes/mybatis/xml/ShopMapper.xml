@@ -19,6 +19,8 @@
 			shop
 		WHERE
 			train_id = #{train_id}
+		AND
+			isDel = 0
 	</select>
 
 </mapper>
