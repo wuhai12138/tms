@@ -20,6 +20,15 @@ public class TodayOrderModel {
     private String nanny_name;
     private Integer days;
     private String mission_time;
+    private String nanny_phone;
+
+    public String getNanny_phone() {
+        return nanny_phone;
+    }
+
+    public void setNanny_phone(String nanny_phone) {
+        this.nanny_phone = nanny_phone;
+    }
 
     public String getReVisitStatus() {
         return ReVisitStatus;

@@ -18,7 +18,8 @@
 		ose.shop_name AS shop_name,
 		ose.mission_id AS mission_id ,
 		GROUP_CONCAT(ni.nanny_name) AS nanny_name,
-		ose.mission_time AS mission_time
+		ose.mission_time AS mission_time,
+		ni.nanny_phone AS nanny_phone
 		FROM
 		(
 		SELECT
